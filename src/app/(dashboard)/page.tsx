@@ -227,12 +227,10 @@ export default function HomePage() {
             Synchronize LSTM vs GRU, Transformer vs Mamba, TCN vs LSTM, and more.
           </p>
         </Link>
-        <Link className="rounded-2xl border bg-card p-6 transition-colors hover:bg-muted/50" href="https://github.com/">
-          <p className="font-medium">GitHub</p>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Contribute walkthroughs, datasets, renderer plugins, and educational examples.
-          </p>
-        </Link>
+        <Link
+          className="rounded-2xl border bg-card p-6 transition-colors hover:bg-muted/50"
+          href={process.env.NEXT_PUBLIC_GITHUB_URL ?? "https://github.com/"}
+        >
       </section>
     </div>
   );
