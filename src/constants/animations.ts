@@ -6,3 +6,5 @@ export const ANIMATION_CHANNELS = [
 ] as const;
 
 export const DEFAULT_FRAME_RATE = 60;
+
+export const PLAYBACK_STEP_MS = 700;

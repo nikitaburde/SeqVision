@@ -10,7 +10,7 @@ export async function GET(_: Request, { params }: Params) {
   const { modelId, chapterId } = await params;
   const model = MODEL_SPECS[modelId as keyof typeof MODEL_SPECS];
 
-  if (!model) {
+  if (!Object.hasOwn(MODEL_SPECS, modelId)) {
     return NextResponse.json({ error: "Model not found" }, { status: 404 });
   }
 

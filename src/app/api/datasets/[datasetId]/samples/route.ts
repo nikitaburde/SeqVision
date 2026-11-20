@@ -1,26 +1,22 @@
 import { NextResponse } from "next/server";
+import { apiError } from "@/api/lesson";
+import { getDatasetById, sampleDataset } from "@/data/datasets";
 
-import { DATASETS } from "@/constants/model";
-
-interface Params {
-  params: Promise<{ datasetId: string }>;
-}
-
-export async function GET(_: Request, { params }: Params) {
+export async function GET(request: Request, { params }: { params: Promise<{ datasetId: string }> }) {
   const { datasetId } = await params;
-  const dataset = DATASETS.find((item) => item.id === datasetId);
-
-  if (!dataset) {
-    return NextResponse.json({ error: "Dataset not found" }, { status: 404 });
+  const dataset = getDatasetById(datasetId);
+  if (!dataset) return apiError("Dataset not found", 404);
+  const { searchParams } = new URL(request.url);
+  const start = Number(searchParams.get("start") ?? 0);
+  const length = Number(searchParams.get("length") ?? 4);
+  if (!Number.isSafeInteger(start) || start < 0 || start > Number.MAX_SAFE_INTEGER - dataset.windowRange[1] ||
+    !Number.isInteger(length) || length < 1 || length > dataset.windowRange[1]) {
+    return apiError("Invalid sample window");
   }
 
-  return NextResponse.json({
-    dataset,
-    samples: [
-      { t: 0, value: 0.11 },
-      { t: 1, value: 0.13 },
-      { t: 2, value: 0.16 },
-      { t: 3, value: 0.19 },
-    ],
+  const samples = Array.from({ length }, (_, index) => {
+    const t = start + index;
+    return { t, value: sampleDataset(datasetId, t) };
   });
+  return NextResponse.json({ dataset, source: "synthetic", samples });
 }

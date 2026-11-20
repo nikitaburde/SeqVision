@@ -2,10 +2,9 @@ import Link from "next/link";
 
 export default function TopNavbar() {
   return (
-    <header className="flex h-16 items-center justify-between border-b bg-background px-6">
-      <h1 className="font-semibold">Interactive Sequence Model Visualizer</h1>
+    <header className="hidden h-16 shrink-0 items-center justify-between border-b bg-background px-6 lg:flex">
+      <p className="font-semibold">Interactive Sequence Model Visualizer</p>
       <div className="flex items-center gap-4 text-sm">
-        <span className="text-muted-foreground">60 FPS target</span>
         <Link
           href="https://github.com/nikitaburde/SeqVision"
           target="_blank"

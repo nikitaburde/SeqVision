@@ -1,21 +1,18 @@
 import { NextResponse } from "next/server";
+import { apiError, getChapterPhase, modelIdSchema } from "@/api/lesson";
+import { getLessonFrame } from "@/simulation/runtime";
 
-interface Params {
-  params: Promise<{ modelId: string; opId: string }>;
-}
-
-export async function GET(_: Request, { params }: Params) {
+export async function GET(_: Request, { params }: { params: Promise<{ modelId: string; opId: string }> }) {
   const { modelId, opId } = await params;
-
+  const model = modelIdSchema.safeParse(modelId);
+  if (!model.success) return apiError("Model not found", 404);
+  const phase = getChapterPhase(model.data, opId);
+  if (phase === -1) return apiError("Operation not found", 404);
+  const { tensor } = getLessonFrame(model.data, phase);
   return NextResponse.json({
     modelId,
     opId,
-    equation: "f_t = σ(W_f[h,x] + b_f)",
-    atoms: [
-      { opId: `${opId}-concat`, equationTermId: "[h,x]", startFrame: 0, endFrame: 12 },
-      { opId: `${opId}-matmul`, equationTermId: "W_f[h,x]", startFrame: 13, endFrame: 30 },
-      { opId: `${opId}-bias`, equationTermId: "+ b_f", startFrame: 31, endFrame: 40 },
-      { opId: `${opId}-sigmoid`, equationTermId: "σ", startFrame: 41, endFrame: 55 },
-    ],
+    equation: tensor.equation,
+    atoms: [{ opId: tensor.id, equationTermId: tensor.id, startFrame: phase, endFrame: phase }],
   });
 }

@@ -2,6 +2,7 @@ import type { ModelId } from "@/types";
 
 export const APP_ROUTES = {
   home: "/",
+  language: "/language",
   compare: "/compare",
   research: "/research",
   docs: "/docs",
@@ -18,6 +19,7 @@ export const APP_ROUTES = {
 
 export const PRIMARY_NAV_ITEMS = [
   { label: "Home", href: APP_ROUTES.home },
+  { label: "Language Lab", href: APP_ROUTES.language },
   { label: "Compare", href: APP_ROUTES.compare },
   { label: "Research", href: APP_ROUTES.research },
   { label: "Docs", href: APP_ROUTES.docs },

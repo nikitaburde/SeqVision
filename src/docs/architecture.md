@@ -1,36 +1,12 @@
-# SeqVision Architecture Blueprint
+# SeqVision Architecture
 
-## Product Goal
-SeqVision is an open-source educational platform that visualizes how sequence models compute internally with equation-synchronized animation and tensor inspection.
+The dashboard uses Next.js and React. Explorer, comparison, and research screens all call the same deterministic lesson engine. The UI can play, seek, or step through a run locally.
 
-## Core System Layers
-- **Frontend shell (Next.js + React):** routing, layout, controls, docs, and page composition.
-- **Visualization runtime (Three.js + React Three Fiber):** 3D/2D rendering, post-processing, camera control.
-- **Simulation engine:** deterministic operation scheduling and model state transitions.
-- **Equation sync engine:** maps active operation atoms to equation terms frame-by-frame.
-- **Tensor engine:** tracks tensor artifacts, stats, distributions, memory usage, and gradients.
-- **Walkthrough engine:** chapter scripts, timeline cues, camera focus, and learning checkpoints.
-- **Backend APIs:** models, walkthroughs, simulation, tensors, datasets, progress, compare, and research endpoints.
+- `src/constants/model.ts` defines model metadata, chapter order, and preset pairs.
+- `src/data/datasets.ts` defines reproducible normalized synthetic signals.
+- `src/simulation/lessons.ts` computes the operations for seven simplified teaching architectures using fixed coefficients.
+- `src/simulation/runtime.ts` maps each timeline step to a chapter and time step, builds the displayed tensor, and computes statistics.
+- `src/components/model` provides playback, tensor tables, and inspection. The explorer shows a selectable Three.js block for each operation and samples large tensors for the viewport. The inspector exposes the complete tensor. Each chapter has an independent timeline of intermediate tensors and explanatory steps emitted by the lesson engine. Opening a chapter keeps the current input selected and starts that chapter’s animation.
+- `src/api/lesson.ts` validates options and manages bounded in-process API runs. Route handlers use the same lesson functions as the dashboard.
 
-## Runtime Flow
-1. User selects architecture + controls.
-2. Simulation run initializes with deterministic seed and timeline.
-3. Operation DAG emits state diffs and tensor artifacts.
-4. Renderer applies diffs, updates materials/instancing, composes overlays.
-5. Equation panel highlights active terms; inspector auto-focuses output tensors.
-6. Progress/bookmarks/quizzes persist through API.
-
-## Performance Strategy
-- Route and model-level lazy loading.
-- GPU instancing, LOD, culling, and pooled materials/textures.
-- Workerized tensor stats and optional OffscreenCanvas rendering.
-- Progressive loading from quick preview to full fidelity.
-
-## Accessibility and UX
-- Keyboard-first interaction model and reduced-motion mode.
-- WCAG 2.2 AA contrast and semantic ARIA labels.
-- Dark/light themes and responsive adaptive layouts.
-
-## Extensibility
-- Plugin contracts for new model definitions, walkthrough packs, datasets, and inspector modules.
-- Standardized op/event schema for compatibility across architectures.
+The teaching configurations use small input dimensions and show intermediate operations. Compare mode reports theoretical operation counts for causal attention and selective scan. Research exports carry the input options and exact frames used by the dashboard. The roadmap tracks broader training diagnostics, real dataset integration, and extensibility.

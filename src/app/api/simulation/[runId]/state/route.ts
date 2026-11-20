@@ -1,16 +1,8 @@
 import { NextResponse } from "next/server";
+import { apiError, getRun, getRunState } from "@/api/lesson";
 
-interface Params {
-  params: Promise<{ runId: string }>;
-}
-
-export async function GET(_: Request, { params }: Params) {
+export async function GET(_: Request, { params }: { params: Promise<{ runId: string }> }) {
   const { runId } = await params;
-
-  return NextResponse.json({
-    runId,
-    status: "running",
-    playhead: 0,
-    activeChapterId: "lstm-1",
-  });
+  const run = getRun(runId);
+  return run ? NextResponse.json(getRunState(run)) : apiError("Run not found", 404);
 }

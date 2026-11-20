@@ -1,5 +1,7 @@
 # SeqVision Product Roadmap
 
+The current release provides seven fixed-weight walkthroughs, synchronized comparisons, synthetic dataset presets, and exportable tensor traces. The phases below describe the broader roadmap, including real dataset integration, training diagnostics, and the plugin ecosystem.
+
 ## Phase 1 — MVP (Interactive LSTM)
 - LSTM model explorer and chapter walkthrough.
 - Equation-synced timeline and baseline tensor inspector.

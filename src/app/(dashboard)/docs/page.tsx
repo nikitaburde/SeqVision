@@ -15,10 +15,10 @@ export default function DocsPage() {
       <PageHeader title="Documentation" description="Technical specs, API contracts, roadmap, and contributor workflow." />
       <div className="grid gap-3 md:grid-cols-2">
         {docs.map((doc) => (
-          <article key={doc.path} className="rounded-lg border p-4">
+          <Link key={doc.path} href={`https://github.com/nikitaburde/SeqVision/blob/main${doc.path}`} className="rounded-lg border p-4 hover:bg-accent">
             <p className="font-medium">{doc.title}</p>
             <p className="mt-1 text-sm text-muted-foreground">{doc.path}</p>
-          </article>
+          </Link>
         ))}
       </div>
       <Link href="https://github.com/nikitaburde/SeqVision" target="_blank" rel="noreferrer" className="inline-block rounded-md border px-3 py-2 text-sm hover:bg-accent">

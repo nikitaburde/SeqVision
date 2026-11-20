@@ -1,0 +1,108 @@
+.lang-lab .lang-workspace { min-height: calc(100dvh - 3.75rem); }
+
+.lang-viewport-banner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  margin: 0.2rem clamp(0.9rem, 2.4vw, 2rem);
+  font-size: 0.82rem;
+}
+
+.lang-canvas { min-height: 20rem; }
+.lang-guide h2 { font-size: 1.05rem; font-weight: 650; letter-spacing: -0.025em; }
+
+.lang-section {
+  padding-block: 1rem;
+  border-top: 1px solid #ded4e8;
+  margin-top: 0.85rem;
+}
+
+.lang-label {
+  display: block;
+  font-size: 0.8rem;
+  margin-bottom: 0.3rem;
+  font-weight: 650;
+}
+
+.lang-field {
+  width: 100%;
+  border: 1px solid #d6cee0;
+  border-radius: 0.48rem;
+  background: white;
+  padding: 0.52rem 0.65rem;
+  font-size: 0.88rem;
+}
+
+.lang-note {
+  margin-top: 0.45rem;
+  color: #574a68;
+  font-size: 0.83rem;
+  line-height: 1.53;
+}
+
+.lang-run {
+  border: 1px solid #7954b9;
+  border-radius: 0.48rem;
+  padding: 0.48rem 0.7rem;
+  background: #6742a5;
+  color: white;
+  font-size: 0.83rem;
+  font-weight: 650;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.lang-run:hover { background: #56368d; }
+
+.lang-chip {
+  display: inline-grid;
+  min-width: 1.85rem;
+  min-height: 1.85rem;
+  place-items: center;
+  padding-inline: 0.3rem;
+  border: 1px solid #dfd1ee;
+  border-radius: 0.38rem;
+  background: #f0e7fb;
+  color: #492774;
+  font: 650 0.8rem ui-monospace, monospace;
+}
+
+.lang-chip[data-segment="prompt"] { background: #d9f3ea; border-color: #9dd5c6; color: #184a41; }
+.lang-chip[data-segment="output"] { background: #fae3dc; border-color: #ecc0b2; color: #70392d; }
+
+.lang-table {
+  width: 100%;
+  text-align: right;
+  border-collapse: collapse;
+  font: 0.7rem ui-monospace, monospace;
+  white-space: nowrap;
+}
+
+.lang-table :is(td, th) { padding: 0.38rem 0.26rem; border-bottom: 1px solid #ded4e8; }
+.lang-table th:first-child { text-align: left; }
+.lang-table td[data-sign="1"] { color: #205647; }
+.lang-table td[data-sign="-1"] { color: #9b382c; }
+
+.lang-specs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+  padding: 0.85rem;
+  margin-block: 0.85rem;
+  border-radius: 0.55rem;
+  background: #ede5f5;
+  font-size: 0.78rem;
+}
+
+.lang-specs dd { font: 650 0.95rem ui-monospace, monospace; }
+
+.lang-formula {
+  margin-block: 0.65rem 0.85rem;
+  padding: 0.55rem 0.65rem;
+  border-inline-start: 3px solid #a584db;
+  border-radius: 0.28rem;
+  background: #eee5f8;
+  color: #432767;
+  font: 0.74rem/1.45 ui-monospace, monospace;
+  overflow-wrap: anywhere;
+}

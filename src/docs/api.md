@@ -1,41 +1,43 @@
-# SeqVision API Specification
+# SeqVision API
 
-## Models
-- `GET /api/models` — list supported model metadata.
-- `GET /api/models/:modelId/config` — fetch model configuration and chapter definitions.
+All requests and responses use JSON. Invalid inputs return HTTP 400, unknown resources return 404, and stale simulation steps return 409.
 
-## Walkthroughs
-- `GET /api/walkthroughs/:modelId` — list chapters for a model.
-- `GET /api/walkthroughs/:modelId/chapters/:chapterId` — fetch chapter details.
+## Models and walkthroughs
+
+| Method and path | Result |
+| --- | --- |
+| `GET /api/models` | Model catalog |
+| `GET /api/models/:modelId/config` | Model metadata and chapters |
+| `GET /api/walkthroughs/:modelId` | Chapters for a model |
+| `GET /api/walkthroughs/:modelId/chapters/:chapterId` | One chapter |
+| `GET /api/compare/pairs` | Available comparisons |
 
 ## Simulation
-- `POST /api/simulation/start` — start a run with model + controls.
-- `POST /api/simulation/step` — step forward/backward.
-- `GET /api/simulation/:runId/state` — fetch active state snapshot.
 
-## Tensors
-- `GET /api/tensors/:runId/:tensorId` — tensor values and metadata.
-- `GET /api/tensors/:runId/:tensorId/stats` — tensor stats/distribution/memory profile.
+Send `POST /api/simulation/start` with an optional model ID and lesson options. The default is a three-step, four-feature LSTM example. The supported lesson ranges are 1–24 time steps and 1–8 features. Use a dataset ID for a synthetic signal or an empty string for the example input.
 
-## Equations and Animation Events
-- `GET /api/equations/:modelId/:opId` — equation and atomic mapping.
-- `GET /api/animations/events?runId=&t=` — timeline event stream.
+```json
+{"modelId":"lstm","options":{"length":3,"width":4,"dataset":"temperature"}}
+```
 
-## Datasets
-- `GET /api/datasets` — dataset catalog.
-- `GET /api/datasets/:datasetId/samples` — sample time windows.
+The response includes a run ID, the zero-based playhead, the current chapter, and its equation and tensor. Fetch that state with `GET /api/simulation/:runId/state`. To advance or rewind, send `POST /api/simulation/step` with the run ID and a direction of `forward` or `backward`. Include the last observed `currentStep` to detect stale updates. The playhead stops at each end of the timeline.
 
-## Learning Progress and Advanced Features
-- `POST /api/progress` — persist chapter completion/bookmarks.
-- `GET /api/compare/pairs` — available comparison presets.
-- `POST /api/research/query` — research panel query and trace request.
+Runs are stored in one server process. The server retains the most recent 256 runs until restart.
 
-## Event Schema
-Each animation event includes:
-- `eventId`
-- `t`
-- `opId`
-- `tensorIds[]`
-- `equationTermIds[]`
-- `cameraCue`
-- `chapterId`
+## Tensors, equations, and events
+
+| Method and path | Result |
+| --- | --- |
+| `GET /api/tensors/:runId/:tensorId` | Operation tensor at the run's current time step |
+| `GET /api/tensors/:runId/:tensorId/stats` | Float32 size, mean, population variance, extrema, and eight histogram counts |
+| `GET /api/equations/:modelId/:opId` | Teaching equation and its chapter-level timeline mapping |
+| `GET /api/animations/events?runId=…&t=…` | Operation and tensor references for one timeline step, defaulting to the playhead |
+
+Operation and tensor IDs use chapter IDs such as `lstm-2`. Chapter titles as lowercase slugs, such as `forget-gate`, are also accepted.
+
+## Datasets, research, and progress
+
+- `GET /api/datasets` lists normalized synthetic dataset presets.
+- `GET /api/datasets/:datasetId/samples?start=0&length=24` returns a reproducible window. The default length is four and the maximum is the upper bound in the dataset catalog.
+- `POST /api/research/query` takes a `runId` and optional `query` containing a chapter ID or slug. It returns that operation's frames across the run. The current chapter is used when the query is omitted.
+- `POST /api/progress` takes `modelId`, `chapterId`, and `completed`. It stores completion in a client cookie. Send the cookie with `GET /api/progress` to retrieve completed chapter IDs. The explorer stores completion locally in the browser.
