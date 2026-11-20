@@ -8,7 +8,10 @@ export const MODEL_SPECS: Record<ModelId, ModelSpec> = {
     complexity: "O(k·n)",
     status: "mvp",
     chapters: [
+      "Input Weights",
+      "Recurrent Weights",
       "Input",
+      "Gate Pre-activations",
       "Forget Gate",
       "Input Gate",
       "Candidate Memory",
@@ -16,13 +19,11 @@ export const MODEL_SPECS: Record<ModelId, ModelSpec> = {
       "Output Gate",
       "Hidden State",
       "Prediction",
-      "Loss",
-      "Backpropagation",
     ].map((title, index) => ({
       id: `lstm-${index + 1}`,
       title,
-      summary: `Stepwise walkthrough for ${title.toLowerCase()} in LSTM computation.`,
-      operationFocus: ["matmul", "add", "activation", "state-update"],
+      summary: `Inspect the computed ${title.toLowerCase()} in the LSTM forward pass.`,
+      operationFocus: ["matmul", "activation", "state-update"],
     })),
   },
   xlstm: {
@@ -51,12 +52,12 @@ export const MODEL_SPECS: Record<ModelId, ModelSpec> = {
     name: "GRU",
     shortDescription: "Compact gated recurrence with reset and update pathways.",
     complexity: "O(k·n)",
-    status: "beta",
+    status: "planned",
     chapters: ["Reset Gate", "Update Gate", "Candidate", "Hidden State", "Prediction"].map(
       (title, index) => ({
         id: `gru-${index + 1}`,
         title,
-        summary: `GRU walkthrough chapter for ${title.toLowerCase()}.`,
+        summary: `GRU walkthrough chapter for ${title.toLowerCase()} mechanics.`,
         operationFocus: ["matmul", "add", "sigmoid", "tanh"],
       }),
     ),
@@ -67,7 +68,7 @@ export const MODEL_SPECS: Record<ModelId, ModelSpec> = {
     shortDescription: "Selective state-space sequence model with linear-time selective scan.",
     complexity: "O(n)",
     flagship: true,
-    status: "beta",
+    status: "planned",
     chapters: [
       "Input Projection",
       "State Space",
@@ -81,7 +82,7 @@ export const MODEL_SPECS: Record<ModelId, ModelSpec> = {
     ].map((title, index) => ({
       id: `mamba-${index + 1}`,
       title,
-      summary: `Mamba selective propagation chapter for ${title.toLowerCase()}.`,
+      summary: `Mamba selective propagation chapter for ${title.toLowerCase()} mechanics.`,
       operationFocus: ["ssm", "carry", "scan"],
     })),
   },
@@ -90,7 +91,7 @@ export const MODEL_SPECS: Record<ModelId, ModelSpec> = {
     name: "Transformer",
     shortDescription: "Attention-based parallel sequence processing baseline.",
     complexity: "O(n²)",
-    status: "beta",
+    status: "planned",
     chapters: [
       "Embedding",
       "Positional Encoding",
