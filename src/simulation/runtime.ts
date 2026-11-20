@@ -11,7 +11,21 @@ export interface RenderableTensor extends TensorDescriptor {
   equation: string;
 }
 
-const INPUT_VALUES = [0.12, -0.34, 0.56, 0.78, -0.9, 0.21, 0.43, -0.65, 0.87, -0.09, 0.31, 0.52];
+const LSTM_INPUT_FEATURES = 4;
+const LSTM_HIDDEN_UNITS = 4;
+const LSTM_GATE_COUNT = 4;
+const LSTM_INPUT_WEIGHT_SEED = 20260801;
+
+function initializeLstmInputWeights(): number[] {
+  const rows = LSTM_GATE_COUNT * LSTM_HIDDEN_UNITS;
+  const limit = Math.sqrt((6 / (LSTM_INPUT_FEATURES + rows)));
+  let state = LSTM_INPUT_WEIGHT_SEED;
+
+  return Array.from({ length: rows * LSTM_INPUT_FEATURES }, () => {
+    state = (1664525 * state + 1013904223) >>> 0;
+    return ((state / 0x1_0000_0000) * 2 - 1) * limit;
+  });
+}
 
 function calculateStats(values: number[]) {
   const mean = values.reduce((total, value) => total + value, 0) / values.length;
@@ -41,13 +55,18 @@ export function getPhaseATensor(modelId: ModelId): RenderableTensor | null {
     return null;
   }
 
+  const rows = LSTM_GATE_COUNT * LSTM_HIDDEN_UNITS;
+  const values = initializeLstmInputWeights();
+
   return {
-    id: "lstm-input-sequence",
-    name: "Input sequence x",
-    shape: [3, 4],
-    dimensions: ["time steps", "input features"],
-    equation: "x = [x₁, x₂, x₃] ∈ ℝ^{3×4}",
-    values: INPUT_VALUES,
-    stats: calculateStats(INPUT_VALUES),
+    id: "lstm-input-weights",
+    name: "LSTM input weight matrix Wₓ",
+    shape: [rows, LSTM_INPUT_FEATURES],
+    dimensions: ["gate × hidden units", "input features"],
+    weightMatrix: "Wₓ",
+    bias: "bₓ",
+    equation: "zₜ = Wₓxₜ + bₓ,  Wₓ ∈ ℝ^{4H×D}",
+    values,
+    stats: calculateStats(values),
   };
 }
